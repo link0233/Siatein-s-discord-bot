@@ -1,0 +1,9 @@
+{
+    "maxNumber": 100,
+    "mixNumber":0,
+    "nowNumber": 0,
+    "guessCount": 0,
+    "memberData": {},
+    "guessMax": 100,
+    "guessMix": 0
+}
