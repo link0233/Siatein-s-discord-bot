@@ -41,6 +41,24 @@ async def on_message(message):
 
     if message.author == client.user or message.author.bot:#排除機器人
         return
+
+    if serverId == servers["EnterCommend"]: #指令輸入
+        if content[0] == "/" and userName in commendMember:
+            #try:
+                text = content.split(",")
+                #數字接龍
+                if text[0] == "/numberCountAlldata" : await server.send(str( numberCounter.data ))
+                if text[0] == "/reloadNumberCountData" : numberCounter.reload()
+                #猜數字
+                if text[0] == "/startGuessNumber" or text[0] == "/GuessNumberRestart    ": GuessNumber.restart()
+                if text[0] == "/saveGuessNumberData" : GuessNumber.save()
+                if text[0] == "/setGuessNumberMaxNumber" : GuessNumber.maxNumber = int(text[1])
+                if text[0] == "/setGuessNumberMixNumber" : GuessNumber.mixNumber = int(text[1])
+                if text[0] == "/reloadGuessNumberData" : GuessNumber.load()
+                #踩地雷
+                if text[0] == "/reloadMinesweeper": minesweeper.reload()
+                if text[0] == "/MinesweeperShowMines": await server.send(minesweeper.ChangeMapToTextAddEmojiShowMines())
+            #except:await server.send("## 指令錯誤!")
     
     if serverId == servers["sayYousayServerId"]:#回你訊息
         await message.channel.send(message.author.global_name + " : " + message.content)
@@ -54,10 +72,12 @@ async def on_message(message):
             await message.channel.send(a[random.randint(0,len(a)-1)])
 
     if serverId == servers["numberCountServerId"]:#數字接龍
-        test = numberCounter.test(message.content)
+        test = numberCounter.test(userName,message.content)
         if test == 1:
+            rank.numberCountTrue(userName,numberCounter.data[userName])
             await message.add_reaction("✅")
         if test == 2:
+            rank.numberCountFalse(userName,numberCounter.data[userName])
             await message.channel.send("# 啊?你竟然錯了，這麼簡單的事你也不會?**                                **好吧，只能重來了")
             await message.add_reaction("❌")
             await message.add_reaction("🚫")
@@ -71,32 +91,27 @@ async def on_message(message):
             await message.channel.send("# "+ userName + x + ","+ v+"," + a)
 
     if serverId == servers["guessNumber"] : # 猜數字
-        if content[0] == "/":
-            try:
-                text = content.split(",")
-                if text[0] == "/start" or text[0] == "/restart": GuessNumber.restart()
-                if text[0] == "/save" : GuessNumber.save()
-                if text[0] == "/setMaxNumber" : GuessNumber.maxNumber = int(text[1])
-                if text[0] == "/setMixNumber" : GuessNumber.mixNumber = int(text[1])
-                if text[0] == "/reloadData" : GuessNumber.load()
-            except:await server.send("## 指令錯誤!")
-
         try : 
             number = int(content)
             type = GuessNumber.EnterNumber(number,userName)
 
-            if type == 1: 
+            if type == 1:
+                rank.GuessNumberTrue(userName,GuessNumber.maxNumber,GuessNumber.guessCount) 
                 await server.send("# " + str(userName) + "獲勝!")
                 await server.send("## 共猜了" + str(GuessNumber.guessCount) + "次")
                 GuessNumber.restart()
 
-            if type == 2: await server.send("太大了")
-            if type == 3: await server.send("太小了")
+            if type == 2: await server.send("太大了");rank.GuessNumberFalse(userName,GuessNumber.nowNumber,GuessNumber.maxNumber,GuessNumber.guessNumber) 
+            if type == 3: await server.send("太小了");rank.GuessNumberFalse(userName,GuessNumber.nowNumber,GuessNumber.maxNumber,GuessNumber.guessNumber) 
             await server.send("## 請猜數字" + str(GuessNumber.guessmix) + "~" + str(GuessNumber.guessmax))
 
         except : pass
 
-    if serverId == servers["Minesweeper"]:
+    if serverId == servers["Minesweeper"]:#踩地雷
+        try: 
+            text = content.split(",")
+
+        except :await server.send("指令錯誤")
         AnsType = minesweeper.Enter(userName,content)
         win = minesweeper.testWin()
 

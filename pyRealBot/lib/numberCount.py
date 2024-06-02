@@ -3,7 +3,7 @@ import json
 class numberCount:
     def __init__(self):
         self.number = 1
-        #self.reload()
+        self.reload()
 
     def reload(self):
         with open("./saves/numberCount.json" ,"r") as f:
@@ -12,7 +12,7 @@ class numberCount:
     def add(self):
         self.number += 1
     
-    def test(self,testNumber,user):
+    def test(self,user,testNumber):
         try:
             testNumber = int(testNumber)
             if testNumber == self.number:

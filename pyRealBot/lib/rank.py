@@ -41,6 +41,7 @@ class Rank:
             self.data[userName][0] += score
             self.data[userName][1] += score/10 * math.log10(self.data[userName][0])
         else:
+            self.data[userName] = [1,1]
             self.data[userName][0] = score
             self.data[userName][1] = score//10
         self.save()
