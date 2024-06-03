@@ -3,8 +3,9 @@ import random
 class box:
     def __init__(self):
                         #箱子名稱     所有物品名稱0,               1:chanse(第幾項,機率)     ,2:cost, 3:開到第幾項
-        self.boxes = {"box1" :[ ["textItem","teem"] , self.setrollList([[ 0 , 5],[ 1 , 2 ]]) ,10, 0]}
-        selfoutput = []
+        self.boxes = {"box1"            : [ ["textItem","teem"]      , self.setrollList([[ 0 , 5],[ 1 , 2 ]]) ,10, 0],
+                      "money bouns box" : [["x1.1","x1.2","x1,5","x2"], self.setrollList([[0,10],[1,6],[2,4],[3,1]]) , 100 ,0]}
+        self.output = []
 
     def openBox(self,usermoney,boxname) :
         try:

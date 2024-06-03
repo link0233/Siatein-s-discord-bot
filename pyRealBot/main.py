@@ -6,6 +6,7 @@ from lib.numberCount import *
 from lib.guessNumber import *
 from lib.rank import *
 from lib.Minesweeper import *
+from lib.ItemAndTrad.item import *
 
 intents = discord.Intents.default()#練切權限
 intents.message_content = True
@@ -29,6 +30,7 @@ numberCounter = numberCount()
 GuessNumber = guessNumber()
 minesweeper = Minesweeper()
 rank = Rank()
+Item = item()
 
 #傳送訊息
 @client.event
@@ -146,6 +148,18 @@ async def on_message(message):
             minesweeper.saveAll() 
             await server.send( minesweeper.ChangeMapToTextAddEmoji() )
     
+    if serverId == servers["openBox"] :
+        try:
+            content = content.split(",")
+            if len(content) == 2:
+                if content[0] == "buy money bouns box":
+                    out = Item.openBox(userName,"money bouns box", int(content[1]) )
+            else:
+                await server.send("?");return
+
+            await server.send(str(out))
+        except: await server.send("?");return
+
     print(message)
 
 #正在輸入訊息
