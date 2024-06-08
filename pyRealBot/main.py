@@ -107,6 +107,7 @@ async def on_message(message):
             if type == 3: await server.send("太小了");rank.GuessNumberFalse(userName,GuessNumber.nowNumber,GuessNumber.maxNumber,GuessNumber.guessNumber) 
             await server.send("## 請猜數字" + str(GuessNumber.guessmix) + "~" + str(GuessNumber.guessmax))
 
+            GuessNumber.save()
         except : pass
 
     if serverId == servers["Minesweeper"]:#踩地雷
