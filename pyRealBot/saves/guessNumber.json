@@ -1,9 +1,1 @@
-{
-    "maxNumber": 100,
-    "mixNumber":0,
-    "nowNumber": 0,
-    "guessCount": 0,
-    "memberData": {},
-    "guessMax": 100,
-    "guessMix": 0
-}
+{"maxNumber": 100, "mixNumber": 0, "nowNumber": 34, "guessCount": 0, "memberData": {"siatelin": [52, 7]}, "guessMax": 100, "guessMix": 0}
