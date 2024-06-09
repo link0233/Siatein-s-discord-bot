@@ -149,17 +149,19 @@ async def on_message(message):
             minesweeper.saveAll() 
             await server.send( minesweeper.ChangeMapToTextAddEmoji() )
     
-    if serverId == servers["openBox"] :
-        try:
+    if serverId == servers["openBox"] :#商店
+        #try:
             content = content.split(",")
             if len(content) == 2:
                 if content[0] == "buy money bouns box":
                     out = Item.openBox(userName,"money bouns box", int(content[1]) )
+                if content[0] == "buy":
+                    out = Item.openBox(userName,"box1", int(content[1]) )
             else:
                 await server.send("?");return
 
             await server.send(str(out))
-        except: await server.send("?");return
+        #except: await server.send("?");return
 
     print(message)
 

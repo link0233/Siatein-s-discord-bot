@@ -1,27 +1,37 @@
 import random
+import json
 
 class box:
     def __init__(self):
-                        #箱子名稱     所有物品名稱0,               1:chanse(第幾項,機率)     ,2:cost, 3:開到第幾項
-        self.boxes = {"box1"            : [ ["textItem","teem"]      , self.setrollList([[ 0 , 5],[ 1 , 2 ]]) ,10, 0],
-                      "money bouns box" : [["x1.1","x1.2","x1,5","x2"], self.setrollList([[0,10],[1,6],[2,4],[3,1]]) , 100 ,0]}
+        self.boxes = {}
         self.output = []
+        self.loadBox()
 
-    def openBox(self,usermoney,boxname) :
+    def loadBox(self):
+        #箱子名稱     所有物品名稱0,               1:chanse(第幾項,機率)     ,2:cost, 3:開到第幾項
+        with open("./lib/ItemAndTrad/boxdata.json" , "r") as f:
+            self.boxes = json.load(f)
+        for i in self.boxes :
+            self.boxes[i]. append(0)
+            self.boxes[i][1] = self.setrollList(self.boxes[i][1])
+            print(self.boxes)
+
+    def restBox(self):
+        for i in self.boxes :
+            self.boxes[i][3] = 0
+            self.boxes[i][1] = self.setrollList(self.boxes[i][1])
+
+    def openBox(self,boxname) :
         try:
             boxData = self.boxes[boxname]
         except : return "notFindBox"
 
-        if usermoney >= boxData[2] :
-            get = boxData[0][ boxData[1][ boxData[3] ] ]
-            boxData[3] +=1
-            if boxData[3] > len(boxData[1]) -1 :
-                boxData[3] = 0
-        else:
-            return "notEnoughMoney"
-        
-        usermoney -= boxData[2]
-        return [get , usermoney]
+        get = boxData[0][ boxData[1][ boxData[3] ] ]
+        boxData[3] +=1
+        if boxData[3] > len(boxData[1]) -1 :
+            boxData[3] = 0
+            
+        return get
         
     def setrollList(self,rollChanse):
         rollList = []
