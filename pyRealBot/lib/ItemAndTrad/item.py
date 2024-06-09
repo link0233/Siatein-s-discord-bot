@@ -88,7 +88,7 @@ class item:
             #     money = self.moneyData[userName][1]
             # except:
             #     return ["not find his money"]
-            out = self.box.openBox(money,boxName)
+            out = self.box.openBox(boxName)
             # if out == "notEnoughMoney":
             #     return ["not enough money" ]
             # if out == "notFindBox":

@@ -29,8 +29,9 @@ async def on_ready():
 numberCounter = numberCount()
 GuessNumber = guessNumber()
 minesweeper = Minesweeper()
-rank = Rank()
 Item = item()
+rank = Rank(Item.itemdata)
+
 
 #傳送訊息
 @client.event
@@ -76,11 +77,13 @@ async def on_message(message):
     if serverId == servers["numberCountServerId"]:#數字接龍
         test = numberCounter.test(userName,message.content)
         if test == 1:
-            rank.numberCountTrue(userName,numberCounter.data[userName])
+            rankget = rank.numberCountTrue(userName,numberCounter.data[userName])
             await message.add_reaction("✅")
+            await server.send(userName + "獲得" + str(rankget[0]) +" rank , " +str(rankget[1]) +" money")
         if test == 2:
-            rank.numberCountFalse(userName,numberCounter.data[userName])
+            rankget = rank.numberCountFalse(userName,numberCounter.data[userName])
             await message.channel.send("# 啊?你竟然錯了，這麼簡單的事你也不會?**                                **好吧，只能重來了")
+            await server.send(userName + "獲得" + str(rankget[0]) +" rank , " +str(rankget[1]) +" money")
             await message.add_reaction("❌")
             await message.add_reaction("🚫")
 
@@ -98,13 +101,20 @@ async def on_message(message):
             type = GuessNumber.EnterNumber(number,userName)
 
             if type == 1:
-                rank.GuessNumberTrue(userName,GuessNumber.maxNumber,GuessNumber.guessCount) 
+                rankget = rank.GuessNumberTrue(userName,GuessNumber.maxNumber,GuessNumber.guessCount) 
                 await server.send("# " + str(userName) + "獲勝!")
+                await server.send(userName + "獲得" + str(rankget[0]) +" rank , " +str(rankget[1]) +" money")
                 await server.send("## 共猜了" + str(GuessNumber.guessCount) + "次")
                 GuessNumber.restart()
 
-            if type == 2: await server.send("太大了");rank.GuessNumberFalse(userName,GuessNumber.nowNumber,GuessNumber.maxNumber,GuessNumber.guessNumber) 
-            if type == 3: await server.send("太小了");rank.GuessNumberFalse(userName,GuessNumber.nowNumber,GuessNumber.maxNumber,GuessNumber.guessNumber) 
+            if type == 2: 
+                await server.send("太大了")
+                rankget = rank.GuessNumberFalse(userName,GuessNumber.nowNumber,GuessNumber.maxNumber,GuessNumber.guessNumber)
+                await server.send(userName + "獲得" + str(rankget[0]) +" rank , " +str(rankget[1]) +" money")
+            if type == 3: 
+                await server.send("太小了")
+                rankget = rank.GuessNumberFalse(userName,GuessNumber.nowNumber,GuessNumber.maxNumber,GuessNumber.guessNumber) 
+                await server.send(userName + "獲得" + str(rankget[0]) +" rank , " +str(rankget[1]) +" money")
             await server.send("## 請猜數字" + str(GuessNumber.guessmix) + "~" + str(GuessNumber.guessmax))
 
             GuessNumber.save()
@@ -114,20 +124,25 @@ async def on_message(message):
         try: 
             text = content.split(",")
 
-        except :await server.send("指令錯誤")
+        except :await server.send("指令錯誤") ; return
         AnsType = minesweeper.Enter(userName,content)
         win = minesweeper.testWin()
 
         if AnsType == "error" :
-            await server.send("### 格式出錯")
+            await server.send("### 格式出錯");return
         if AnsType == "digged":
-            await server.send("### 已挖掘")
+            await server.send("### 已挖掘");return
         if AnsType == "fine": 
-            pass
+            rankget = rank.addScore( minesweeper.rankadd )
+            await server.send(userName + "獲得" + str(rankget[0]) +" rank , " +str(rankget[1]) +" money")            
         if win:
             await server.send("# " + userName + "挖除了最後一個方塊，獲勝")
+            rankget = rank.addScore( minesweeper.rankadd )
+            await server.send(userName + "獲得" + str(rankget[0]) +" rank , " +str(rankget[1]) +" money")
         if AnsType == "lose":
             await server.send("# " + userName + "挖到了地雷，輸了")
+            rankget = rank.addScore( minesweeper.rankadd )
+            await server.send(userName + "獲得" + str(rankget[0]) +" rank , " +str(rankget[1]) +" money")            
 
         if AnsType == "lose" or win:#詳細數據
             NowData = minesweeper.nowData
@@ -150,18 +165,40 @@ async def on_message(message):
             await server.send( minesweeper.ChangeMapToTextAddEmoji() )
     
     if serverId == servers["openBox"] :#商店
-        #try:
+        try:
             content = content.split(",")
             if len(content) == 2:
-                if content[0] == "buy money bouns box":
-                    out = Item.openBox(userName,"money bouns box", int(content[1]) )
+                out = False
+                if content[0] == "buy money bonus box":     #開箱
+                    out = Item.openBox(userName,"money bonus box", int(content[1]) )
+                    rank.addMoneyBonus(userName,Item.itemdata[userName])
                 if content[0] == "buy":
                     out = Item.openBox(userName,"box1", int(content[1]) )
+
+                if out:
+                    if out[0] == "not find his money":
+                        await server.send("你沒錢，去玩遊戲賺錢再來")
+                        return 
+                    if out[0] == "not find box":
+                        await server.send("沒這箱子")
+                        return
+                    if out[0] == "not enough money":
+                        await server.send("你錢不夠")
+                    else:
+                        #顯示結果
+                        await server.send("## " + userName + "獲得:")
+                        outItem = out[0]
+                        for i in outItem:
+                            count = outItem[i]
+                            await server.send(i + " : " + str(count) + "個")
+                        await server.send("剩下 : " + str(out[2]) + "元")
+                else:
+                    await server.send("你有地方輸入錯了")
+
             else:
                 await server.send("?");return
 
-            await server.send(str(out))
-        #except: await server.send("?");return
+        except: await server.send("?");return
 
     print(message)
 
