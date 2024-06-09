@@ -74,7 +74,7 @@ async def on_message(message):
             a = ["hi","嗨嗨",'hiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii',"hihihihihihihihihihi","c9 c9 c9 ","嗨嗨嗨嗨嗨","hello"]       
             await message.channel.send(a[random.randint(0,len(a)-1)])
 
-    if serverId == servers["numberCountServerId"]:#數字接龍
+    if serverId == servers["numberCountServerId"]:#數字接龍 
         test = numberCounter.test(userName,message.content)
         if test == 1:
             rankget = rank.numberCountTrue(userName,numberCounter.data[userName])
@@ -133,15 +133,15 @@ async def on_message(message):
         if AnsType == "digged":
             await server.send("### 已挖掘");return
         if AnsType == "fine": 
-            rankget = rank.addScore( minesweeper.rankadd )
+            rankget = rank.addScore( minesweeper.rankadd,userName )
             await server.send(userName + "獲得" + str(rankget[0]) +" rank , " +str(rankget[1]) +" money")            
         if win:
             await server.send("# " + userName + "挖除了最後一個方塊，獲勝")
-            rankget = rank.addScore( minesweeper.rankadd )
+            rankget = rank.addScore( minesweeper.rankadd,userName )
             await server.send(userName + "獲得" + str(rankget[0]) +" rank , " +str(rankget[1]) +" money")
         if AnsType == "lose":
             await server.send("# " + userName + "挖到了地雷，輸了")
-            rankget = rank.addScore( minesweeper.rankadd )
+            rankget = rank.addScore( minesweeper.rankadd,userName )
             await server.send(userName + "獲得" + str(rankget[0]) +" rank , " +str(rankget[1]) +" money")            
 
         if AnsType == "lose" or win:#詳細數據
