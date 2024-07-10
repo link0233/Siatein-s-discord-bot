@@ -8,7 +8,10 @@ class Rank:
         self.load()
         try:
             for i in self.data:
-                self.addMoneyBonus(i,item[i])
+                if i in item:
+                    self.addMoneyBonus(i,item[i])
+                else:
+                    self.moneyBonus[i] = 0
         except: pass
 
     def addMoneyBonus(self,userName,userItem):
@@ -55,6 +58,8 @@ class Rank:
             self.data = json.load(f)
 
     def addScore(self,score,userName):
+        if userName not in self.moneyBonus:
+            self.moneyBonus[userName] = 0
         if userName in self.data:
             self.data[userName][0] += score
             self.data[userName][1] += score/10 * math.log10(self.data[userName][0]) + self.moneyBonus[userName]
@@ -66,5 +71,5 @@ class Rank:
             self.data[userName][1] = score//10 + self.moneyBonus[userName]
             addrank = score
             addmoney = score/10 * math.log10(self.data[userName][0]) + self.moneyBonus[userName]
-        return [addrank,addmoney]
         self.save()
+        return [addrank,addmoney]

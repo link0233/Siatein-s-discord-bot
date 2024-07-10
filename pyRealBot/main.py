@@ -200,6 +200,18 @@ async def on_message(message):
 
         except: await server.send("?");return
 
+    if serverId == servers["Minesweeper2"]:
+        try:
+            d = content.split(",")
+            x: int = int(d[0])
+            y: int = int(d[1])
+            z: int = int(d[2])
+            a = minesweeper.createMap2(x,y,z)
+            await server.send(a)
+
+        except:
+            await server.send("error")
+
     print(message)
 
 #正在輸入訊息

@@ -57,6 +57,53 @@ class Minesweeper:
 
         self.saveMap()
 
+    def createMap2(self,mapx,mapy,mines) -> str:
+        map = []
+        for i in range(mapy):
+            d = []
+            for j in range (mapx):
+                d.append([0,0,0])
+            map.append(d)
+
+        #mapTypes:
+        # 第一項
+        # 0: none
+        # 1: diged
+        # 3: mine
+        # 第二項 : 4周地雷數
+        # 第三項 : flag
+
+        for i in range(mines):
+            x = random.randint(0 , mapx - 1)
+            y = random.randint(0 , mapy - 1)
+            while map[y][x][0] == 3:
+                x = random.randint(0 , mapx - 1)
+                y = random.randint(0 , mapy - 1)
+            
+            map[y][x][0] = 3
+
+            if y > 0 : 
+                if x > 0                and map[y - 1][x - 1][0] != 3 : map[y - 1][x - 1][1] += 1
+                if x < mapx -1 and map[y - 1][x + 1][0] != 3 : map[y - 1][x + 1][1] += 1
+                if map[y - 1][x][0] != 3 : map[y - 1][x][1] += 1
+            if y < mapy -1 : 
+                if x > 0                and map[y + 1][x - 1][0] != 3 : map[y + 1][x - 1][1] += 1
+                if x < mapx -1 and map[y + 1][x + 1][0] != 3 : map[y + 1][x + 1][1] += 1
+                if map[y + 1][x][0] != 3 : map[y + 1][x][1] += 1
+            if x > 0                and map[y][x - 1][0] != 3 : map[y][x - 1][1] += 1
+            if x < mapx -1 and map[y][x + 1][0] != 3 : map[y][x + 1][1] += 1
+
+        text : str = ""
+        for i in map:
+            for j in i:
+                if j[0] == 3:
+                    text += "||:x:||"
+                else: 
+                    text += f"||{self.numberEmoji[j[1]]}||"
+            text += "\n"
+        
+        return text
+
     def ChangeMapToText(self):
         text = ""
         for i in self.map:
@@ -266,7 +313,7 @@ class Minesweeper:
                     self.allData[i][j] = 1
         self.saveAllData()
 
-# a = stepOnLandMines()
+#a = Minesweeper()
 # print(a.k(92))
 # print(a.dig(a,1,3,False))
 # print(a.dig(a,2,3,False))
@@ -280,3 +327,4 @@ class Minesweeper:
 
 # print(a.ChangeMapToTextAddEmoji())
 # print(a.ChangeMapToText())
+# print(a.createMap2(10,5,9))
