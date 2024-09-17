@@ -45,7 +45,7 @@ async def on_message(message):
     if message.author == client.user or message.author.bot:#排除機器人
         return
 
-    if serverId == servers["EnterCommend"]: #指令輸入
+    if serverId in servers["EnterCommend"]: #指令輸入
         if content[0] == "/" and userName in commendMember:
             #try:
                 text = content.split(",")
@@ -63,10 +63,10 @@ async def on_message(message):
                 if text[0] == "/MinesweeperShowMines": await server.send(minesweeper.ChangeMapToTextAddEmojiShowMines())
             #except:await server.send("## 指令錯誤!")
     
-    if serverId == servers["sayYousayServerId"]:#回你訊息
+    if serverId in servers["sayYousayServerId"]:#回你訊息
         await message.channel.send(message.author.global_name + " : " + message.content)
 
-    if serverId == servers["firendMainChat"]:                    # 阿嶳457
+    if serverId in servers["firendMainChat"]:                    # 阿嶳457
         emoji = "🫨😭🕛🕚🔲👁️‍🗨️◼️🟤🤣🙂🫥😑😑😑😛🫤🙃🙁☹️😲😔😝😝😝😝😝😝😝😜😜😜😜😛😛😛😣😣😣😥😥😥😑😑😑😑😑😑😑😑😑😐😐😐😫😫😝😜😛🫤🙃🫠☹️🙁"
         await message.add_reaction(emoji[random.randint(0,len(emoji )-1)])
 
@@ -74,7 +74,7 @@ async def on_message(message):
             a = ["hi","嗨嗨",'hiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii',"hihihihihihihihihihi","c9 c9 c9 ","嗨嗨嗨嗨嗨","hello"]       
             await message.channel.send(a[random.randint(0,len(a)-1)])
 
-    if serverId == servers["numberCountServerId"]:#數字接龍 
+    if serverId in servers["numberCountServerId"]:#數字接龍 
         test = numberCounter.test(userName,message.content)
         if test == 1:
             rankget = rank.numberCountTrue(userName,numberCounter.data[userName])
@@ -95,7 +95,7 @@ async def on_message(message):
             a = "正確率" + str(userData[0]/(userData[0]+ userData[1] )*100) +"%"
             await message.channel.send("# "+ userName + x + ","+ v+"," + a)
 
-    if serverId == servers["guessNumber"] : # 猜數字
+    if serverId in servers["guessNumber"] : # 猜數字
         try : 
             number = int(content)
             type = GuessNumber.EnterNumber(number,userName)
@@ -120,7 +120,7 @@ async def on_message(message):
             GuessNumber.save()
         except : pass
 
-    if serverId == servers["Minesweeper"]:#踩地雷
+    if serverId in servers["Minesweeper"]:#踩地雷
         try: 
             text = content.split(",")
 
@@ -164,7 +164,7 @@ async def on_message(message):
             minesweeper.saveAll() 
             await server.send( minesweeper.ChangeMapToTextAddEmoji() )
     
-    if serverId == servers["openBox"] :#商店
+    if serverId in servers["openBox"] :#商店
         try:
             content = content.split(",")
             if len(content) == 2:
@@ -200,7 +200,7 @@ async def on_message(message):
 
         except: await server.send("?");return
 
-    if serverId == servers["Minesweeper2"]:
+    if serverId in servers["Minesweeper2"]:
         try:
             d = content.split(",")
             x: int = int(d[0])
